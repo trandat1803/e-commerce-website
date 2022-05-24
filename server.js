@@ -13,6 +13,39 @@ admin.initializeApp({
 
 let db = admin.firestore();
 
+const aws = require('aws-sdk');
+const dotenv = require('dotenv');
+const { parse } = require('path');
+const { url } = require('inspector');
+
+dotenv.config();
+
+const region = "us-west-2";
+const bucketName = "ecom-website-dhd";
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_KEY;
+
+aws.config.update({
+    region, accessKeyId, secretAccessKey
+})
+
+const s3 = new aws.S3();
+
+async function generateUrl(){
+    let date = new Date();
+    let id = parseInt(Math.random() * 10000000000);
+
+    const imageName = `${id}${date.getTime()}.jpg`;
+
+    const params = ({
+        Bucket: bucketName,
+        Key: imageName,
+        Expires: 300,
+        ContentType: 'image/jpeg'
+    })
+    const uploadUrl = await s3.getSignedUrlPromise('putObject', params);
+    return uploadUrl;
+}
 //declare stattic path
 let staticPath = path.join(__dirname, "public");
     
@@ -132,6 +165,13 @@ app.post('/seller', (req, res) => {
     }
 })
 
+app.get('/add-product',(req,res)=>{
+    res.sendFile(path.join(staticPath,"addProduct.html"));
+})
+
+app.get('/s3url', (req,res) => {
+    generateUrl().then(url => res.json(url));
+})
 //404 route
 app.get('/404', (req, res) =>{
     res.sendFile(path.join(staticPath, "404.html"));
