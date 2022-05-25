@@ -169,40 +169,80 @@ app.get('/add-product',(req,res)=>{
     res.sendFile(path.join(staticPath,"addProduct.html"));
 })
 
+app.get('/add-product/:id',(req,res)=>{
+    res.sendFile(path.join(staticPath,"addProduct.html"));
+})
+
 app.get('/s3url', (req, res) => {
     generateUrl().then(url => res.json(url));
 })
 
 app.post('/add-product', (req, res) => {
-    let { name, shortDes, des, images, sizes, actualPrice, discount, sellPrice, stock, tags, tac, email } = req.body;
+    let { name, shortDes, des, images, sizes, actualPrice, discount, sellPrice, stock, tags, tac, email, draft, id } = req.body;
 
-    if(!name.length){
-        return res.json({'alert': 'enter product name'});
-    }else if (shortDes.length >100 || shortDes.length < 10 ){
-        return  res.json({'alert': 'short description must be between 10 to 100 letters long'});
-    }else if (!des.length){
-        return  res.json({'alert': 'enter detail description about the product'});
-    }else if (!images.length){
-        return  res.json({'alert': 'upload atleast one product image'});
-    }else if (!sizes.length){
-        return  res.json({'alert': 'select at least one size'});
-    }else if (!actualPrice.length || !discount.length || !sellPrice.length){
-        return  res.json({'alert': 'you must add pricings'});
-    }else if(stock < 20){
-        return  res.json({'alert': 'you should have at least 20 items in stock'});
-    }else if(!tags.length){
-        return  res.json({'alert': 'enter few tags to help ranking your product in search'});
-    }else if(!tac){
-        return  res.json({'alert': 'you must agree to our terms and conditions'});
+    if(!draft){
+        if(!name.length){
+            return res.json({'alert': 'enter product name'});
+        }else if (shortDes.length >100 || shortDes.length < 10 ){
+            return  res.json({'alert': 'short description must be between 10 to 100 letters long'});
+        }else if (!des.length){
+            return  res.json({'alert': 'enter detail description about the product'});
+        }else if (!images.length){
+            return  res.json({'alert': 'upload atleast one product image'});
+        }else if (!sizes.length){
+            return  res.json({'alert': 'select at least one size'});
+        }else if (!actualPrice.length || !discount.length || !sellPrice.length){
+            return  res.json({'alert': 'you must add pricings'});
+        }else if(stock < 20){
+            return  res.json({'alert': 'you should have at least 20 items in stock'});
+        }else if(!tags.length){
+            return  res.json({'alert': 'enter few tags to help ranking your product in search'});
+        }else if(!tac){
+            return  res.json({'alert': 'you must agree to our terms and conditions'});
+        }
     }
 
-    let docName = `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}`;
+    let docName = id == undefined ? `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}` : id;
     db.collection('product').doc(docName).set(req.body)
     .then(data => {
         res.json({'product': name});
     })
     .catch(err => {
         return res.json({'alert': 'some error occured. Try again'});
+    })
+})
+
+app.post('/get-products', (req, res) => {
+    let {email, id} = req.body;
+    let docRef = id ? db.collection('products').doc(id) : db.collection('products').where('email', '==', email);
+
+    docRef.get()
+    .then(products => {
+        if(products.empty){
+            return res.json('no products');
+        }
+        let productArr = [];
+        if(id){
+            return res.json(products.data());
+        }else{
+            products.forEach(item => {
+                let data =item.data();
+                data.id = item.id;
+                productArr.push(data);
+            })
+            res.json(productArr)
+        }
+    })
+})
+
+app.post('/delete-product', (req,res) => {
+    let { id } = req.body;
+
+    db.collection('products').doc(id).delete()
+    .then(data => {
+        res.json('success');
+    }).catch(err => {
+        res.json('err');
     })
 })
 
