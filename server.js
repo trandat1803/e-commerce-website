@@ -172,6 +172,40 @@ app.get('/add-product',(req,res)=>{
 app.get('/s3url', (req, res) => {
     generateUrl().then(url => res.json(url));
 })
+
+app.post('/add-product', (req, res) => {
+    let { name, shortDes, des, images, sizes, actualPrice, discount, sellPrice, stock, tags, tac, email } = req.body;
+
+    if(!name.length){
+        return res.json({'alert': 'enter product name'});
+    }else if (shortDes.length >100 || shortDes.length < 10 ){
+        return  res.json({'alert': 'short description must be between 10 to 100 letters long'});
+    }else if (!des.length){
+        return  res.json({'alert': 'enter detail description about the product'});
+    }else if (!images.length){
+        return  res.json({'alert': 'upload atleast one product image'});
+    }else if (!sizes.length){
+        return  res.json({'alert': 'select at least one size'});
+    }else if (!actualPrice.length || !discount.length || !sellPrice.length){
+        return  res.json({'alert': 'you must add pricings'});
+    }else if(stock < 20){
+        return  res.json({'alert': 'you should have at least 20 items in stock'});
+    }else if(!tags.length){
+        return  res.json({'alert': 'enter few tags to help ranking your product in search'});
+    }else if(!tac){
+        return  res.json({'alert': 'you must agree to our terms and conditions'});
+    }
+
+    let docName = `${name.toLowerCase()}-${Math.floor(Math.random() * 5000)}`;
+    db.collection('product').doc(docName).set(req.body)
+    .then(data => {
+        res.json({'product': name});
+    })
+    .catch(err => {
+        return res.json({'alert': 'some error occured. Try again'});
+    })
+})
+
 //404 route
 app.get('/404', (req, res) =>{
     res.sendFile(path.join(staticPath, "404.html"));

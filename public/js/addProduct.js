@@ -40,9 +40,9 @@ uploadImages.forEach((fileupload, index) => {
         let imageUrl;
 
         if(file.type.includes('image')){
-            fletch('/s3url').then(res => res.json())
+            fetch('/s3url').then(res => res.json())
             .then(url => {
-                fletch(url,{
+                fetch(url,{
                     method: 'PUT',
                     headers: new Headers({'Content-Type': 'multipart/form-data'}),
                     body: file 
@@ -107,10 +107,29 @@ const validateForm = () => {
     return true;
 }
 
+const productData = () => {
+    return data = {
+        name: productName.value,
+        shortDes: shortLine.value,
+        des: des.value,
+        images: imagePaths,
+        sizes: sizes,
+        actualPrice: actualPrice.value,
+        discount: discountPercentage.value,
+        sellPrice: sellingPrice.value,
+        stock: stock.value,
+        tags: tags.value,
+        tac: tac.checked,
+        email: user.email
+    }
+}
+
 addProductBtn.addEventListener('click', () => {
     storeSizes();
     
     if(validateForm()){
-
+        loader.style.display = 'block';
+        let data = productData();
+        sendData('/add-product', data);
     }
 })
