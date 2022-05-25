@@ -90,7 +90,9 @@ const validateForm = () => {
     }else if (shortLine.value.length >100 || shortLine.value.length < 10 ){
         return showAlert('short description must be between 10 to 100 letters long');
     }else if (!des.value.length){
-        return showAlert('upload at least one product image');
+        return showAlert('enter detail description about the product');
+    }else if (!imagePaths.length){
+        return showAlert('upload atleast one product image');
     }else if (!sizes.length){
         return showAlert('select at least one size');
     }else if (!actualPrice.value.length || !discount.value.length || !sellingPrice.value.length){
