@@ -169,7 +169,7 @@ app.get('/add-product',(req,res)=>{
     res.sendFile(path.join(staticPath,"addProduct.html"));
 })
 
-app.get('/s3url', (req,res) => {
+app.get('/s3url', (req, res) => {
     generateUrl().then(url => res.json(url));
 })
 //404 route
