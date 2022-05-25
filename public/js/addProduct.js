@@ -1,16 +1,16 @@
 let user = JSON.parse(sessionStorage.user || null);
 let loader = document.querySelector('.loader');
 
-window.onload = () => {
-    if (user){
-        if(!compareToken(user.authToken, user.email)){
-            location.replace('/login');
-        }
-    }
-    else{
-        location.replace('/login');
-    }
-}
+// window.onload = () => {
+//     if (user){
+//         if(!compareToken(user.authToken, user.email)){
+//             location.replace('/login');
+//         }
+//     }
+//     else{
+//         location.replace('/login');
+//     }
+// }
 
 const actualPrice = document.querySelector('#actual-price');
 const discountPercentage = document.querySelector('#discount');
@@ -84,10 +84,10 @@ const storeSizes = () => {
     })
 }
 
-const valideForm = () => {
+const validateForm = () => {
     if(!productName.value.length){
         return showAlert('enter product name');
-    } else if (shortLine.value.length >100 || shortLine.value.length < 10 ){
+    }else if (shortLine.value.length >100 || shortLine.value.length < 10 ){
         return showAlert('short description must be between 10 to 100 letters long');
     }else if (!des.value.length){
         return showAlert('upload at least one product image');
@@ -108,7 +108,7 @@ const valideForm = () => {
 addProductBtn.addEventListener('click', () => {
     storeSizes();
     
-    if(valideForm()){
+    if(validateForm()){
 
     }
 })
