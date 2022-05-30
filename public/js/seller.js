@@ -2,7 +2,7 @@ let loader = document.querySelector('.loader');
 let user = JSON.parse(sessionStorage.user || null);
 
 const becomeSellerElement = document.querySelector('.become-seller');
-const productListeningElement = document.querySelector('.product-listening');
+const productListingElement = document.querySelector('.product-listing');
 const applyForm = document.querySelector('.apply-form');
 const showApplyFormBtn = document.querySelector('#apply-button');
 
@@ -67,7 +67,7 @@ const setupProducts = () => {
     .then(res => res.json())
     .then(data =>{
         loader.style.display = null;
-        productListeningElement.classList.remove('hide');
+        productListingElement.classList.remove('hide');
         if(data == 'no products'){
             let emptySvg = document.querySelector('.no-product-image');
             emptySvg.classList.remove('hide');

@@ -1,16 +1,16 @@
 let user = JSON.parse(sessionStorage.user || null);
 let loader = document.querySelector('.loader');
 
-// window.onload = () => {
-//     if (user){
-//         if(!compareToken(user.authToken, user.email)){
-//             location.replace('/login');
-//         }
-//     }
-//     else{
-//         location.replace('/login');
-//     }
-// }
+window.onload = () => {
+    if (user){
+        if(!compareToken(user.authToken, user.email)){
+            location.replace('/login');
+        }
+    }
+    else{
+        location.replace('/login');
+    }
+}
 
 const actualPrice = document.querySelector('#actual-price');
 const discountPercentage = document.querySelector('#discount');

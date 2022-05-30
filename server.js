@@ -184,21 +184,21 @@ app.post('/add-product', (req, res) => {
         if(!name.length){
             return res.json({'alert': 'enter product name'});
         }else if (shortDes.length >100 || shortDes.length < 10 ){
-            return  res.json({'alert': 'short description must be between 10 to 100 letters long'});
+            return res.json({'alert': 'short description must be between 10 to 100 letters long'});
         }else if (!des.length){
-            return  res.json({'alert': 'enter detail description about the product'});
+            return res.json({'alert': 'enter detail description about the product'});
         }else if (!images.length){
-            return  res.json({'alert': 'upload atleast one product image'});
+            return res.json({'alert': 'upload atleast one product image'});
         }else if (!sizes.length){
-            return  res.json({'alert': 'select at least one size'});
+            return res.json({'alert': 'select at least one size'});
         }else if (!actualPrice.length || !discount.length || !sellPrice.length){
-            return  res.json({'alert': 'you must add pricings'});
+            return res.json({'alert': 'you must add pricings'});
         }else if(stock < 20){
-            return  res.json({'alert': 'you should have at least 20 items in stock'});
+            return res.json({'alert': 'you should have at least 20 items in stock'});
         }else if(!tags.length){
-            return  res.json({'alert': 'enter few tags to help ranking your product in search'});
+            return res.json({'alert': 'enter few tags to help ranking your product in search'});
         }else if(!tac){
-            return  res.json({'alert': 'you must agree to our terms and conditions'});
+            return res.json({'alert': 'you must agree to our terms and conditions'});
         }
     }
 
@@ -235,7 +235,7 @@ app.post('/get-products', (req, res) => {
     })
 })
 
-app.post('/delete-product', (req,res) => {
+app.post('/delete-product', (req, res) => {
     let { id } = req.body;
 
     db.collection('products').doc(id).delete()

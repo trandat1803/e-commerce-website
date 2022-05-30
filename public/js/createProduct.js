@@ -26,7 +26,7 @@ const createProduct = (data) => {
     `;
 }
 
-const openDeletePopup =(id) => {
+const openDeletePopup = (id) => {
     let deleteAlert = document.querySelector('.delete-alert');
     deleteAlert.style.display = 'flex';
 
