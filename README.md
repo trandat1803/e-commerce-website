@@ -1,6 +1,6 @@
 # e-commerce-website
 <h2>this is my team</h2>
-<tabel border = 1>
+<table border = 1>
 <tr>
 <th>Name</th>
 <th>StudentID</th>
